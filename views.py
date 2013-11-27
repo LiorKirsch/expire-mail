@@ -18,8 +18,14 @@ import os
 
 @never_cache
 def getViewlimited(request, image_id):
-    clientHost = request.META['REMOTE_HOST']
-    clientAdd = request.META['REMOTE_ADDR']
+    if 'REMOTE_HOST' in request.META:
+        clientHost = request.META['REMOTE_HOST']
+    else:
+        clientHost = ''
+    if 'REMOTE_ADDR' in request.META:
+        clientAdd = request.META['REMOTE_ADDR']
+    else:
+        clientAdd = ''
     defaultImagePath = os.path.join(settings.PROJECT_ROOT, 'defaultImage.png')
     imageObject = LimitedViewImage.objects.get(image_id=image_id)
     theImage = imageObject.getImage(defaultImagePath, clientAdd, clientHost)
