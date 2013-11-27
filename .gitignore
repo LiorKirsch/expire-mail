@@ -4,5 +4,5 @@ dev.db
 settings.py
 manage.py
 wsgi.py
-images/*
+images/*.png
 urls.py
