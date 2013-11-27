@@ -31,7 +31,7 @@ def getViewlimited(request, image_id):
     
     defaultImagePath = os.path.join(settings.PROJECT_ROOT, 'defaultImage.png')
     imageObject = LimitedViewImage.objects.get(image_id=image_id)
-    theImage = imageObject.getImage(defaultImagePath, clientAdd, clientHost)
+    theImage = imageObject.getImage(defaultImagePath, clientAdd)
 
     response = HttpResponse(mimetype="image/png")
     response["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -41,14 +41,14 @@ def getViewlimited(request, image_id):
 
 def addViewlimited(request):
 
-    
+    (clientAdd,clientHost) = get_client_ip(request)
     text = request.GET.get('text')
     image_id = generateRandomString(10)
     image_file_name = "%s.png" % image_id 
     fullPath =  os.path.join(settings.PROJECT_IMAGE_FOLDER, image_file_name)
     image_path = text2Image.transformText2(text, fullPath)
     
-    imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path, text=text)
+    imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path, text=text,creating_client_ip = clientAdd)
     imageObject.save()
     imageUrl = 'http://%s/viewlimited/%s' % (settings.SERVER_EXTERNAL_URL ,image_id)
     return sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl})
