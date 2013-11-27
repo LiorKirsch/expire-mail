@@ -35,12 +35,12 @@ def addViewlimited(request):
     image_id = generateRandomString(10)
     image_file_name = "%s.png" % image_id 
     fullPath =  os.path.join(settings.PROJECT_IMAGE_FOLDER, image_file_name)
-    image_path = text2Image.transformText(text, fullPath)
+    image_path = text2Image.transformText2(text, fullPath)
     
     imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path)
     imageObject.save()
-
-    return sendObjectAsJson({"status":"success","image_id": image_id})
+    imageUrl = 'http://expired-mail.liorkirsch.webfactional.com/viewlimited/%s' % image_id
+    return sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl})
 
 def generateRandomString(N):
     return ''.join(random.choice(string.ascii_letters + string.digits) for x in range(N))

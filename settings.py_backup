@@ -1,4 +1,4 @@
-# Django settings for youtubeSlicerWeb project.
+# Django settings for expire_mail project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -8,10 +8,10 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 PROJECT_IMAGE_FOLDER = os.path.join(PROJECT_ROOT,'images') 
 
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
-
 
 MANAGERS = ADMINS
 
@@ -62,7 +62,6 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-VIDEO_ROOT = ''
 STATIC_ROOT = ''
 
 # URL prefix for static files.
@@ -90,7 +89,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '_oni*#4qltw)-74heu#9=#p(kehsmp=30ljsj4j@%-rkwybud%'
+SECRET_KEY = 'tr7u8id1!2fj*2b6k95rlk37lyzt)=24q+h4pehgg+y#5t)ls_'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

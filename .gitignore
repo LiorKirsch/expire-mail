@@ -1,4 +1,6 @@
 *~
 *.pyc
 dev.db
-
+settings.py
+manage.py
+wsgi.py

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -7,8 +7,8 @@ from django.conf.urls.defaults import patterns, include, url
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'expire_mail.views.home', name='home'),
-    url(r'^viewlimited/(?P<image_id>\w+)', 'expire_mail.views.getViewlimited', name='getViewlimited'),
-    url(r'^addViewlimited$', 'expire_mail.views.addViewlimited', name='addViewlimited'),
+    url(r'^viewlimited/(?P<image_id>\w+)', 'myproject.views.getViewlimited', name='getViewlimited'),
+    url(r'^addViewlimited$', 'myproject.views.addViewlimited', name='addViewlimited'),
     
     # url(r'^expire_mail/', include('expire_mail.foo.urls')),
 
