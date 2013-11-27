@@ -18,9 +18,11 @@ import os
 
 @never_cache
 def getViewlimited(request, image_id):
+    clientHost = request.META['REMOTE_HOST']
+    clientAdd = request.META['REMOTE_ADDR']
     defaultImagePath = os.path.join(settings.PROJECT_ROOT, 'defaultImage.png')
     imageObject = LimitedViewImage.objects.get(image_id=image_id)
-    theImage = imageObject.getImage(defaultImagePath)
+    theImage = imageObject.getImage(defaultImagePath, clientAdd, clientHost)
 
     response = HttpResponse(mimetype="image/png")
     response["Cache-Control"] = "no-cache, no-store, must-revalidate"
