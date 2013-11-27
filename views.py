@@ -15,17 +15,20 @@ import random, string
 import text2Image
 import os
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+        
+    host = request.META.get('REMOTE_HOST')
+    return (ip,host)
 
 @never_cache
 def getViewlimited(request, image_id):
-    if 'REMOTE_HOST' in request.META:
-        clientHost = request.META['REMOTE_HOST']
-    else:
-        clientHost = ''
-    if 'REMOTE_ADDR' in request.META:
-        clientAdd = request.META['REMOTE_ADDR']
-    else:
-        clientAdd = ''
+    (clientAdd,clientHost) = get_client_ip(request)
+    
     defaultImagePath = os.path.join(settings.PROJECT_ROOT, 'defaultImage.png')
     imageObject = LimitedViewImage.objects.get(image_id=image_id)
     theImage = imageObject.getImage(defaultImagePath, clientAdd, clientHost)
