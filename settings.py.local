@@ -7,8 +7,7 @@ import os
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 PROJECT_IMAGE_FOLDER = os.path.join(PROJECT_ROOT,'images') 
-
-SERVER_EXTERNAL_URL = 'localhost:8000' 
+PROJECT_FONT_FOLDER = os.path.join(PROJECT_ROOT,'fonts')
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
