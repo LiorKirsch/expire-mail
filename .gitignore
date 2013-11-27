@@ -5,3 +5,4 @@ settings.py
 manage.py
 wsgi.py
 images/*
+urls.py

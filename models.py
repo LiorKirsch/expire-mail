@@ -14,13 +14,15 @@ class LimitedViewImage(models.Model):
     numberOfViews = models.IntegerField(default=0)
     image_file_path = models.CharField(max_length=1000)
     maxViews = models.IntegerField(default=4)
+    text = models.CharField(max_length=1000)
     
     def getImage(self, defaultImagePath):  
         if self.maxViews > self.numberOfViews:
-            imagePathToLoad = open(self.image_file_path, 'r')
+#            imagePathToLoad = open(self.image_file_path, 'r')
+            image_path = text2Image.transformText2('%s \n(%d)' % (self.text, self.numberOfViews), '%s' % self.image_file_path)
         else:
-            image_path = text2Image.transformText2('mail deleted, accessed too many times (%d)' % (self.numberOfViews -4), '%s.png' % self.image_file_path)
-	    imagePathToLoad = open(image_path, 'r')
+            image_path = text2Image.transformText2('mail deleted, accessed too many times (%d)' % (self.numberOfViews), '%s.png' % self.image_file_path)
+        imagePathToLoad = open(image_path, 'r')
 #	    imagePathToLoad = open(defaultImagePath, 'r')
     
         theImage = PilImage.open(imagePathToLoad)
