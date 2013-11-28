@@ -50,7 +50,11 @@ def addViewlimited(request):
     imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path, text=text,creating_client_ip = clientAdd)
     imageObject.save()
     imageUrl = 'http://%s/viewlimited/%s' % ( request.get_host() ,image_id)
-    return sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl})
+    response = sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl}) 
+    response['Access-Control-Allow-Origin']  = settings.XS_SHARING_ALLOWED_ORIGINS
+    response['Access-Control-Allow-Methods'] = ",".join( settings.XS_SHARING_ALLOWED_METHODS )
+#    response['Access-Control-Allow-Headers'] = "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control"
+    return response
 
 def generateRandomString(N):
     return ''.join(random.choice(string.ascii_letters + string.digits) for x in range(N))

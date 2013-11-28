@@ -8,6 +8,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 PROJECT_IMAGE_FOLDER = os.path.join(PROJECT_ROOT,'images') 
 PROJECT_FONT_FOLDER = os.path.join(PROJECT_ROOT,'fonts')
+XS_SHARING_ALLOWED_ORIGINS = 'https://mail.google.com'
+XS_SHARING_ALLOWED_METHODS = 'GET,POST,PUT,HEAD,DELETE,OPTIONS'
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
