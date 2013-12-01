@@ -1,0 +1,38 @@
+{
+  "name": "ONE TIMER",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Send self destructing mail",
+  "homepage_url": "http://expired-mail.liorkirsch.webfactional.com",
+  "icons": {
+    "16": "icons/explodingMail16.png",
+    "48": "icons/explodingMail48.png",
+    "128": "icons/explodingMail128.png"
+  },
+  "default_locale": "en",
+  "background": {
+    "page": "src/bg/background.html",
+    "persistent": true
+  },
+  "page_action": {
+    "default_icon": "icons/explodingMail19.png",
+    "default_title": "using self destructing mail",
+    "default_popup": "src/page_action/page_action.html"
+  },
+  "permissions": [
+    "https://mail.google.com/*",
+    "http://localhost:8000/*",
+    "http://expired-mail.liorkirsch.webfactional.com/*"
+  ],
+  "web_accessible_resources": [
+    "icons/explodingMail28.png",
+    "icons/explodingMailError28.png"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://mail.google.com/*", "https://mail.google.com/*"],
+      "css": ["css/mystyles.css"],
+      "js": ["jquery-1.7.1.min.js","jquery-ui-1.8.13.custom.js", "popup.js","jquery.client.js","src/inject/inject.js","gmail.js"]
+    }
+  ]
+}

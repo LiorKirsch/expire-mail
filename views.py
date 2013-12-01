@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth import logout
@@ -14,6 +14,7 @@ from django.views.decorators.cache import never_cache
 import random, string
 import text2Image
 import os
+from django.views.decorators.csrf import csrf_exempt
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -37,11 +38,21 @@ def getViewlimited(request, image_id):
     theImage.save(response, "PNG")
     return response
 
-
+@csrf_exempt
 def addViewlimited(request):
 
     clientAdd = get_client_ip(request)
-    text = request.GET.get('text')
+    
+    if request.method == 'POST':
+        json_data = simplejson.loads(request.raw_post_data)
+        try:
+            text = json_data['text']
+        except KeyError:
+            HttpResponseServerError("text key not found")
+    else:
+        text = request.GET.get('text')
+        html = request.GET.get('html')
+        
     image_id = generateRandomString(10)
     image_file_name = "%s.png" % image_id 
     fullPath =  os.path.join(settings.PROJECT_IMAGE_FOLDER, image_file_name)

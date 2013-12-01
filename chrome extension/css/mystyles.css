@@ -1,0 +1,7 @@
+div.one-time-button {
+background-image: -webkit-linear-gradient(top,#FE4D70,#F36767); 
+border: 1px solid #ED3030; 
+padding: 0 2px; 
+min-width: 5px
+}
+
