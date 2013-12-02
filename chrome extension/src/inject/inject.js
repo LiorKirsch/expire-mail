@@ -3,6 +3,14 @@ chrome.extension.sendMessage({}, function(response) {
 	if (document.readyState === "complete") {
 		clearInterval(readyStateCheckInterval);
 
+		rangy.init();
+		var highlighter = rangy.createHighlighter();
+
+                highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
+		        ignoreWhiteSpace: true,
+		        tagNames: ["span", "a"]
+		    }));
+
 		var range = rangy.createRange();
 		range.selectNodeContents(document.body);
 
@@ -41,18 +49,38 @@ chrome.extension.sendMessage({}, function(response) {
 
 	 replace_content_with_image = function() {
 
+		var highlighter = rangy.createHighlighter();
+
+                highlighter.addClassApplier(rangy.createCssClassApplier("highlight_selected_to_remove", {
+		        ignoreWhiteSpace: true,
+		        tagNames: ["span", "a"]
+		    }));
+      		highlighter.highlightSelection("highlight_selected_to_remove");
 		var sel = rangy.getSelection();
 		var selectionHtml = sel.toHtml();
-		var numberOfRanges = sel._ranges.length;
+		var numberOfRanges = sel.rangeCount;
 
+		
 		var activating_button = this;
 		var content_item = find_the_closest_compose(this);
 		var text = content_item.text();
 		var contentHtml = content_item.html();
-		var get_url = 'http://expired-mail.liorkirsch.webfactional.com/addViewlimited?text=' +  encodeURIComponent(text);
+
+		var contentToReplace;
+		if (numberOfRanges > 0) {
+			contentToReplace = selectionHtml; 
+		}
+		else {
+			contentToReplace = contentHtml;
+		}
+		if (contentToReplace == '') { contentToReplace = contentHtml; }
+		var contentHtmlCorrected = replace_unused_text(contentToReplace);
+
+
+		var get_url = 'http://expired-mail.liorkirsch.webfactional.com/addViewlimited?text=' +  encodeURIComponent(text) + '&html=' + encodeURIComponent(contentHtmlCorrected);;
 		var posturl = 'http://expired-mail.liorkirsch.webfactional.com/addViewlimited';
 
-		var get_url = 'http://localhost:8000/addViewlimited?text=' +  encodeURIComponent(text) + '&html=' + encodeURIComponent(contentHtml);			
+	//	var get_url = 'http://localhost:8000/addViewlimited?text=' +  encodeURIComponent(text) + '&html=' + encodeURIComponent(contentHtmlCorrected);			
 	//	var post_url = 'http://localhost:8000/addViewlimited';
 		get_url = get_url.trim();
 
@@ -61,25 +89,47 @@ chrome.extension.sendMessage({}, function(response) {
 			//the url where you want to sent the userName and password to
 			url: post_url,
 			dataType: 'json',
-			data: JSON.stringify({ "text": text ,"html": contentHtml}),
+			data: JSON.stringify({ "text": text ,"html": contentHtmlCorrected}),
 			success: function (json) {
 				var imageString = '<div><img src="' + json.image_url + '" alt="Inline image 1"> </div>';
 		  	        content_item.html(imageString);
 			}
 		    });*/
 
-	/*	$.post(post_url, JSON.stringify({ "text": text ,"html",contentHtml}) )
+	/*	$.post(post_url, JSON.stringify({ "text": text ,"html",contentHtmlCorrected}) )
 		  .done(function( json ) {
 			var imageString = '<div><img src="' + json.image_url + '" alt="Inline image 1"> </div>';
 	  	        content_item.html(imageString);
 		  });
 	*/
 		$.getJSON( get_url, function( json ) {
-			var imageString = '<div><img src="' + json.image_url + '" alt="Inline image 1"> </div>';
-	  	        content_item.html(imageString);
+			var imageString = '<img src="' + json.image_url + '" alt="Inline image 1"> ';
+			var currentContent = content_item.html();
+			var elementsToRemove = $('.highlight_selected_to_remove');
+			if (elementsToRemove.length > 0) {
+				$(elementsToRemove[0]).replaceWith(imageString);
+				for (var i=1;i<elementsToRemove.length;i++) {
+					$(elementsToRemove[i]).remove();
+				}
+			}	
+			else {	
+				content_item.html(imageString);	
+			}
+//			var newContent = currentContent.replace(new RegExp(contentToReplace, 'g'), imageString);
+//	  	        content_item.html(newContent);
 		 });
 	 }
 
+	 replace_unused_text = function(contentToReplace) {
+		var contentHtmlCorrected = contentToReplace.replace(new RegExp('\^<div>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div>', 'g'), '\n');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('</div>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<span class="highlight_selected_to_remove">', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('</span>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<br>', 'g'), '\n');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('&nbsp;', 'g'), ' ');
+		return contentHtmlCorrected;
+	 }
 	 dummy_function = function () {
 	 }
 	 find_the_closest_compose = function(item) {
