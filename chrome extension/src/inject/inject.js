@@ -6,12 +6,7 @@ chrome.extension.sendMessage({}, function(response) {
 		rangy.init();
 		var highlighter = rangy.createHighlighter();
 
-                highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
-		        ignoreWhiteSpace: true,
-		        tagNames: ["span", "a"]
-		    }));
-
-		var range = rangy.createRange();
+                var range = rangy.createRange();
 		range.selectNodeContents(document.body);
 
 		var aSendButtonTemplate = $('<div>',{ role:'button' ,text: 'One-Timer', 'data-tooltip': 'send a self-destructing mail', class:'one-time-button T-I J-J5-Ji aoO T-I-atl L3 One_Time_Button_Identifier' ,'data-tooltip-delay':'800'} );
@@ -121,7 +116,9 @@ chrome.extension.sendMessage({}, function(response) {
 	 }
 
 	 replace_unused_text = function(contentToReplace) {
-		var contentHtmlCorrected = contentToReplace.replace(new RegExp('\^<div>', 'g'), '');
+		var contentHtmlCorrected = contentToReplace.replace(new RegExp('\^<div><br></div>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('\^<div>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div><br></div>', 'g'), '\n');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div>', 'g'), '\n');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('</div>', 'g'), '');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<span class="highlight_selected_to_remove">', 'g'), '');

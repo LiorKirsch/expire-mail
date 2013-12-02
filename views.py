@@ -53,12 +53,13 @@ def addViewlimited(request):
         text = request.GET.get('text')
         html = request.GET.get('html')
         
+    
     image_id = generateRandomString(10)
     image_file_name = "%s.png" % image_id 
     fullPath =  os.path.join(settings.PROJECT_IMAGE_FOLDER, image_file_name)
     image_path = text2Image.transformText2(html, fullPath)
     
-    imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path, text=text,creating_client_ip = clientAdd)
+    imageObject = LimitedViewImage(image_id=image_id, image_file_path = image_path, text=html,creating_client_ip = clientAdd)
     imageObject.save()
     imageUrl = 'http://%s/viewlimited/%s' % ( request.get_host() ,image_id)
     response = sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl}) 
