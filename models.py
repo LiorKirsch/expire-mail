@@ -22,7 +22,7 @@ class LimitedViewImage(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True, blank=True)
     creating_client_ip = models.CharField(max_length=1000)
     
-    def getImage(self, defaultImagePath,clientAdd,debug):  
+    def getImage(self, defaultImagePath,clientAdd,debug, creatingUser = False):  
         self.accessing_add = '%s\n%s' % (self.accessing_add, clientAdd)
         if self.maxViews > self.effectiveNumberOfViews:
             if debug:
@@ -40,8 +40,9 @@ class LimitedViewImage(models.Model):
 #	    imagePathToLoad = open(defaultImagePath, 'r')
     
         theImage = PilImage.open(imagePathToLoad)
-        if (clientAdd != self.creating_client_ip) | (datetime.now() > self.creation_date + timedelta(seconds=30) ):
-            self.effectiveNumberOfViews = self.effectiveNumberOfViews +1
+        if (not creatingUser):
+            if (clientAdd != self.creating_client_ip) | (datetime.now() > self.creation_date + timedelta(seconds=30) ):
+                self.effectiveNumberOfViews = self.effectiveNumberOfViews +1
             
         self.numberOfViews = self.numberOfViews +1
         self.save()

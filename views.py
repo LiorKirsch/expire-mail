@@ -27,11 +27,14 @@ def get_client_ip(request):
 
 @never_cache
 def getViewlimited(request, image_id):
+    
+    creatingUser =  request.session.get(image_id, False)
+         
     clientAdd = get_client_ip(request)
     debug = request.GET.get('debug') is not None
     defaultImagePath = os.path.join(settings.PROJECT_ROOT, 'defaultImage.png')
     imageObject = LimitedViewImage.objects.get(image_id=image_id)
-    theImage = imageObject.getImage(defaultImagePath, clientAdd, debug)
+    theImage = imageObject.getImage(defaultImagePath, clientAdd, debug, creatingUser)
 
     response = HttpResponse(mimetype="image/png")
     response["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -65,6 +68,8 @@ def addViewlimited(request):
     response = sendObjectAsJson({"status":"success","image_id": image_id,"image_url": imageUrl}) 
     response['Access-Control-Allow-Origin']  = settings.XS_SHARING_ALLOWED_ORIGINS
     response['Access-Control-Allow-Methods'] = ",".join( settings.XS_SHARING_ALLOWED_METHODS )
+    
+    request.session[image_id] = True
 #    response['Access-Control-Allow-Headers'] = "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control"
     return response
 
