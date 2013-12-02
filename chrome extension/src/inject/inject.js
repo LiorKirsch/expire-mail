@@ -3,6 +3,9 @@ chrome.extension.sendMessage({}, function(response) {
 	if (document.readyState === "complete") {
 		clearInterval(readyStateCheckInterval);
 
+		var range = rangy.createRange();
+		range.selectNodeContents(document.body);
+
 		var aSendButtonTemplate = $('<div>',{ role:'button' ,text: 'One-Timer', 'data-tooltip': 'send a self-destructing mail', class:'one-time-button T-I J-J5-Ji aoO T-I-atl L3 One_Time_Button_Identifier' ,'data-tooltip-delay':'800'} );
 		aSendButtonTemplate.html('<img role="button" style="padding-top:0px;" ' + 'src="' +         chrome.extension.getURL('icons/explodingMail28.png') + '" alt="">'  );
 
@@ -26,7 +29,7 @@ chrome.extension.sendMessage({}, function(response) {
 					else {
 						$(items[loopindex]).after(newJqueryObject);
 					     }
-					newJqueryObject.click(functionOnClick);
+					newJqueryObject.mousedown(functionOnClick);
 
 					$(this).addClass(unique_identifier);	// so it will add this only once.
 				}
@@ -37,6 +40,11 @@ chrome.extension.sendMessage({}, function(response) {
 	  };
 
 	 replace_content_with_image = function() {
+
+		var sel = rangy.getSelection();
+		var selectionHtml = sel.toHtml();
+		var numberOfRanges = sel._ranges.length;
+
 		var activating_button = this;
 		var content_item = find_the_closest_compose(this);
 		var text = content_item.text();
@@ -44,7 +52,7 @@ chrome.extension.sendMessage({}, function(response) {
 		var get_url = 'http://expired-mail.liorkirsch.webfactional.com/addViewlimited?text=' +  encodeURIComponent(text);
 		var posturl = 'http://expired-mail.liorkirsch.webfactional.com/addViewlimited';
 
-	//	var get_url = 'http://localhost:8000/addViewlimited?text=' +  encodeURIComponent(text) + '&html=' + encodeURIComponent(contentHtml);			
+		var get_url = 'http://localhost:8000/addViewlimited?text=' +  encodeURIComponent(text) + '&html=' + encodeURIComponent(contentHtml);			
 	//	var post_url = 'http://localhost:8000/addViewlimited';
 		get_url = get_url.trim();
 

@@ -9,8 +9,10 @@ def transformText2(text, file_path):
     color = 'black'
     background = 'white'
     size = '13'
-    image = 'convert -background '+background+' -fill '+color+' -pointsize '+size+' label'+':"'+text+'" "'+file_path + '"'
-    os.system(image)
+    imageCommand = u' '.join(( 'convert -background ',background,' -fill ',color,' -pointsize ',size,' label:"',text,'" "',file_path , '"' ))
+    imageCommand = imageCommand.encode('utf-8').strip()
+#    imageCommand = 'convert -background '+background+' -fill '+color+' -pointsize '+size+' label'+':"'+text+'" "'+file_path + '"'
+    os.system(imageCommand)
     return file_path
 
 def transformText(text, file_path, fontname="Sans"):
