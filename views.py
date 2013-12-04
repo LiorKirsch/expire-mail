@@ -37,9 +37,7 @@ def getViewlimited(request, image_id):
     theImage = imageObject.getImage(defaultImagePath, clientAdd, debug, creatingUser)
 
     response = HttpResponse(mimetype="image/png")
-    response["Cache-Control"] = "no-cache, no-store, must-revalidate, proxy-revalidate, max-age=0"
-    response["Pragma"] = 'no-cache'
-    response["Expires"] = '0'
+    response["Cache-Control"] = "no-cache, private, no-store, must-revalidate, proxy-revalidate, max-age=1"
     theImage.save(response, "PNG")
     return response
 
