@@ -26,6 +26,7 @@
   ],
   "web_accessible_resources": [
     "icons/explodingMail28.png",
+    "icons/explodingMailLoad.gif",
     "icons/explodingMailError28.png"
   ],
   "content_scripts": [

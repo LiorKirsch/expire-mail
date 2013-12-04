@@ -35,6 +35,10 @@ chrome.extension.sendMessage({}, function(response) {
 					newJqueryObject.mousedown(functionOnClick);
 
 					$(this).addClass(unique_identifier);	// so it will add this only once.
+
+					var addedElementWidth = newJqueryObject.outerWidth();
+					var hiddenRow = find_the_closest_hiddenRow(this);
+					hiddenRow.css('left', '+=' + addedElementWidth);
 				}
 
 			});
@@ -97,6 +101,9 @@ chrome.extension.sendMessage({}, function(response) {
 	  	        content_item.html(imageString);
 		  });
 	*/
+
+		var oldIcon = $(activating_button).find('img').attr('src');
+		$(activating_button).find('img').attr('src', chrome.extension.getURL('icons/explodingMailLoad.gif'));
 		$.getJSON( get_url, function( json ) {
 			var imageString = '<img src="' + json.image_url + '" alt="Inline image 1"> ';
 			var currentContent = content_item.html();
@@ -110,16 +117,17 @@ chrome.extension.sendMessage({}, function(response) {
 			else {	
 				content_item.html(imageString);	
 			}
+			$(activating_button).find('img').attr("src", oldIcon);
 //			var newContent = currentContent.replace(new RegExp(contentToReplace, 'g'), imageString);
 //	  	        content_item.html(newContent);
 		 });
 	 }
 
 	 replace_unused_text = function(contentToReplace) {
-		var contentHtmlCorrected = contentToReplace.replace(new RegExp('\^<div><br></div>', 'g'), '');
-		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('\^<div>', 'g'), '');
-		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div><br></div>', 'g'), '\n');
-		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div>', 'g'), '\n');
+		var contentHtmlCorrected = contentToReplace.replace(new RegExp('\^<div[^>]*><br></div>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('\^<div[^>]*>', 'g'), '');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div[^>]*><br></div>', 'g'), '\n');
+		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<div[^>]*>', 'g'), '\n');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('</div>', 'g'), '');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('<span class="highlight_selected_to_remove">', 'g'), '');
 		contentHtmlCorrected = contentHtmlCorrected.replace(new RegExp('</span>', 'g'), '');
@@ -149,3 +157,9 @@ chrome.extension.sendMessage({}, function(response) {
 	 get_send_button = function() {
 		return $('body div.nH').find('td.gU.Up div.T-I-atl');
 	  };
+
+	find_the_closest_hiddenRow = function(item) {
+		var table = $(item).closest('table.iN');
+		return $(table).find('span.eq');
+	  };
+

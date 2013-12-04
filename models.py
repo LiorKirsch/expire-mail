@@ -32,9 +32,10 @@ class LimitedViewImage(models.Model):
             
         else:
             if debug:
-                image_path = text2Image.transformText2('mail deleted, accessed too many times (%d,%d) %s' % (self.effectiveNumberOfViews, self.numberOfViews, self.accessing_add), '%s.png' % self.image_file_path)
+                image_path = text2Image.transformText2('-- content removed (%d,%d) --%s' % (self.effectiveNumberOfViews, self.numberOfViews, self.accessing_add), '%s.png' % self.image_file_path)
             else:
-                image_path = text2Image.transformText2('mail deleted, accessed too many times (%d)' % (self.effectiveNumberOfViews), '%s.png' % self.image_file_path)
+#                image_path = text2Image.transformText2('-- content removed (%d) --' % (self.effectiveNumberOfViews), '%s.png' % self.image_file_path)
+                image_path = defaultImagePath
             
         imagePathToLoad = open(image_path, 'r')
 #	    imagePathToLoad = open(defaultImagePath, 'r')
