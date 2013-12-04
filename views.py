@@ -28,7 +28,7 @@ def get_client_ip(request):
 @never_cache
 def getViewlimited(request, image_id):
     
-    creatingUser =  request.session.get(image_id, False)
+    creatingUser =  False #request.session.get(image_id, False)
          
     clientAdd = get_client_ip(request)
     debug = request.GET.get('debug') is not None
@@ -37,7 +37,7 @@ def getViewlimited(request, image_id):
     theImage = imageObject.getImage(defaultImagePath, clientAdd, debug, creatingUser)
 
     response = HttpResponse(mimetype="image/png")
-    response["Cache-Control"] = "no-cache, private, no-store, must-revalidate, proxy-revalidate, max-age=1"
+    response["Cache-Control"] = "no-cache, private, no-store, must-revalidate"
     theImage.save(response, "PNG")
     return response
 
@@ -69,7 +69,7 @@ def addViewlimited(request):
     response['Access-Control-Allow-Origin']  = settings.XS_SHARING_ALLOWED_ORIGINS
     response['Access-Control-Allow-Methods'] = ",".join( settings.XS_SHARING_ALLOWED_METHODS )
     
-    request.session[image_id] = True
+#    request.session[image_id] = True
 #    response['Access-Control-Allow-Headers'] = "Content-Type, Depth, User-Agent, X-File-Size, X-Requested-With, If-Modified-Since, X-File-Name, Cache-Control"
     return response
 
