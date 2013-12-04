@@ -38,6 +38,8 @@ def getViewlimited(request, image_id):
 
     response = HttpResponse(mimetype="image/png")
     response["Cache-Control"] = "no-cache, private, no-store, must-revalidate"
+    response["x-content-type-options"] = "nosniff"
+    response["x-xss-protection"] = "1; mode=block"
     theImage.save(response, "PNG")
     return response
 
